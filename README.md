@@ -46,7 +46,7 @@ Monotone minima は 40 ちょっと、SMAWK は画面外ですがおそらく 12
 
 # 結論
 
-ベンチマークに使った SMAWK アルゴリズムがバグっていないと仮定するならば、競プロで使うメリットはなさそうという結論になってしまいます。
+ベンチマークに使った SMAWK アルゴリズムがバグっていないと仮定するならば、monotone minima の高速化目的で競プロで使うメリットはなさそうという結論になってしまいます。（ただし、[noshi91 さんのツイート](https://twitter.com/noshi91/status/1452244188351762436?s=20)にあるようなメリットはあるようです。）
 
 しかし[週刊 spaghetti_source さんによる先行研究](https://topcoder-g-hatena-ne-jp.jag-icpc.org/spaghetti_source/20120923/1348327542.html)によると SMAWK のほうが 1.5 倍程度有利なケースがあるようです。
 
