@@ -1,6 +1,12 @@
 #[cfg(test)]
 mod tests;
-use {itertools::Itertools, std::cmp::Ordering};
+use {
+    itertools::Itertools,
+    rand::{rngs::StdRng, Rng},
+    std::{cmp::Ordering, iter::repeat_with},
+};
+
+const DIFF2_MAX: i32 = 3;
 
 pub fn brute_minplus_convolution(a: &[i32], b: &[i32]) -> Vec<i32> {
     if a.is_empty() && b.is_empty() {
@@ -19,9 +25,10 @@ pub fn monotone_minima_minplus_convolution(a: &[i32], b: &[i32]) -> Vec<i32> {
     if a.is_empty() && b.is_empty() {
         Vec::new()
     } else {
-        let f = |i: usize, j: usize| i.checked_sub(j).and_then(|ij| b.get(ij)).map(|&y| a[j] + y);
+        let eval =
+            |i: usize, j: usize| i.checked_sub(j).and_then(|ij| b.get(ij)).map(|&y| a[j] + y);
         monotone_minima_argmin(a.len() + b.len() - 1, a.len(), |i, j, k| {
-            match [f(i, j), f(i, k)] {
+            match [eval(i, j), eval(i, k)] {
                 [None, None] => Ordering::Equal,
                 [None, Some(_)] => Ordering::Greater,
                 [Some(_), None] => Ordering::Less,
@@ -39,9 +46,10 @@ pub fn smawk_minplus_convolution(a: &[i32], b: &[i32]) -> Vec<i32> {
     if a.is_empty() && b.is_empty() {
         Vec::new()
     } else {
-        let f = |i: usize, j: usize| i.checked_sub(j).and_then(|ij| b.get(ij)).map(|&y| a[j] + y);
+        let eval =
+            |i: usize, j: usize| i.checked_sub(j).and_then(|ij| b.get(ij)).map(|&y| a[j] + y);
         smawk_argmin(a.len() + b.len() - 1, a.len(), |i, j, k| {
-            match [f(i, j), f(i, k)] {
+            match [eval(i, j), eval(i, k)] {
                 [None, None] => Ordering::Equal,
                 [None, Some(_)] => Ordering::Greater,
                 [Some(_), None] => Ordering::Less,
@@ -53,6 +61,31 @@ pub fn smawk_minplus_convolution(a: &[i32], b: &[i32]) -> Vec<i32> {
         .map(|(i, j)| a[j] + b[i - j])
         .collect_vec()
     }
+}
+
+pub fn generate_convex_vec(rng: &mut StdRng, n: usize) -> Vec<i32> {
+    let a = repeat_with(|| rng.gen_range(0..=DIFF2_MAX))
+        .take(n)
+        .collect_vec();
+    let mut a = a
+        .into_iter()
+        .scan(0, |state, x| {
+            *state += x;
+            Some(*state)
+        })
+        .collect_vec();
+    let init = rng.gen_range(a.iter().copied().min().unwrap()..=a.iter().copied().max().unwrap());
+    a.iter_mut().for_each(|x| *x -= init);
+    let mut a = a
+        .into_iter()
+        .scan(0, |state, x| {
+            *state += x;
+            Some(*state)
+        })
+        .collect_vec();
+    let init = rng.gen_range(a.iter().copied().min().unwrap()..=a.iter().copied().max().unwrap());
+    a.iter_mut().for_each(|x| *x -= init);
+    a
 }
 
 fn monotone_minima_argmin(
