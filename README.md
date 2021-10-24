@@ -7,7 +7,7 @@ Convex min-plus convolution を実現するアルゴリズムの実行時間を�
 
 1. `brute`: 定義どおり計算します。(Θ (N²))
 2. `monotone_minima`: [いわゆる monotone minima のアルゴリズム](https://dic.kimiyuki.net/monotone-minima)で計算します。(Θ (N lg N))
-3. `smawk`: [SMAWK アルゴリズム](https://dic.kimiyuki.net/smawk-algorithm)で計算します。(Θ (N lg N))
+3. `smawk`: [SMAWK アルゴリズム](https://dic.kimiyuki.net/smawk-algorithm)で計算します。(Θ (N))
 
 
 Convex なベクターを「ランダムに」生成するとある部分はすべて同じ方法で生成されています。詳しくはコードをご覧いただくとよいのですが、ざっくりいうとたとえば２階差分が一様分布になります。
